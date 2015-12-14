@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Progress</title>
+        <link href='https://fonts.googleapis.com/css?family=Dosis:300' rel='stylesheet' type='text/css'>
+        <style type="text/css">
+            input:focus { outline: none; }
+            .ney { background: #D64541;}
+            .meh { background: #EB974E;}
+            .yeh { background: #2ECC71;}
+            input {
+                color: #fff;
+                height: 50px;
+                width: 100px;
+                padding: 15px;
+                line-height: 50px;
+                text-align: center;
+                border-radius: 8px;
+                border: 2px solid #D5E3E8;
+                background: rgba(0,0,0,.7);
+            }
+            body {
+                background: #18191A;
+                padding: 0; margin: 0;
+            }
+            #bar {
+                top: 0;
+                left: 0;
+                bottom: 0;
+                z-index: 1;
+                position: fixed;
+                transition: 1s all ease;
+            }
+            .input {
+                top: 50%;
+                z-index: 3;
+                width: 100%;
+                color: #D5E3E8;
+                position: fixed;
+                text-align: center;
+                transform: translateY(-50%);
+            }
+            span {
+                bottom: 0;
+                z-index: 2;
+                width: 100%;
+                display: block;
+                position: fixed;
+                font-size: 250px;
+                text-align: center;
+                color: rgba(156,156,156,.5);
+                font-family: 'Dosis', sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="input">
+            <input type="text" id="current"> - <input type="text" id="total">
+        </div>
+        <span>0%</span>
+        <div id="bar"></div>
+        <script>
+            var current = document.getElementById('current'),
+                total = document.getElementById('total'),
+                bar = document.getElementById('bar'),
+                value = document.getElementsByTagName('span')[0];
+                recalculate = function () {
+                    var v = { c: current.value.replace(',', '.'), t: total.value.replace(',', '.') },
+                        i = (v.c / v.t) * 100;
+                    if (!i || !v.c || !v.t) i = 0;
+                    if (i > 100) i = 100;
+                    bar.style.width = i + '%';
+                    if (i >= 75) bar.className = 'yeh';
+                    else if (i >= 25) bar.className = 'meh';
+                    else bar.className = 'ney';
+                    value.textContent = Math.round(i, 2) + '%';
+                    if (localStorage) {
+                        localStorage.setItem('current', v.c);
+                        localStorage.setItem('total', v.t);
+                    }
+                };
+            current.onkeyup = recalculate;
+            total.onkeyup = recalculate;
+            if (localStorage && localStorage.getItem('current') && localStorage.getItem('total')) {
+                current.value = localStorage.getItem('current');
+                total.value = localStorage.getItem('total');
+                recalculate();
+            }
+        </script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-44076475-7', 'auto');
+            ga('send', 'pageview');
+        </script>
+    </body>
+</html>
